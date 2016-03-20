@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a1e08375-32be-44f0-ac7f-e6717e7a9711" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/routes/clear.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/routes/status.js" />
-    </list>
+    <list default="true" id="a1e08375-32be-44f0-ac7f-e6717e7a9711" name="Default" comment="" />
     <ignored path="server.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
