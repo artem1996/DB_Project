@@ -3,8 +3,7 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , routes = require('./routes'),
+var express = require('express'),
     status = require('./routes/status'),
     clear = require('./routes/clear'),
     forum_post = require('./routes/forum_post'),
