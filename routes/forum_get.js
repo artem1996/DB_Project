@@ -144,12 +144,13 @@ var listThreads = function(req, res) {
     var query_w = "WHERE t.forum = '" + req.query.forum + "' ";
     if(req.query.since)
         query_w += "AND t.date >= '" + req.query.since + "'";
-    query_w += " ORDER BY t.date ";
+    query_w += " GROUP BY t.id ORDER BY t.date ";
     if(req.query.order != "asc")
         query_w += "DESC ";
     if(req.query.limit)
         query_w += "LIMIT " + req.query.limit;
     query_w += ";";
+    var userfix = 0;
     if(req.query.related) {
         if(req.query.related instanceof Array) {
             for(var i = 0; i < req.query.related.length; i++) {
@@ -157,7 +158,13 @@ var listThreads = function(req, res) {
                     case 'forum': query_s += ", f.id AS f_id, f.name as f_name, f.short_name as f_short_name, f.user as f_user";
                         query_f += "JOIN forums f ON t.forum = f.short_name "; break;
                     case 'user': query_s += ", u.id AS u_id, u.username AS u_username, u.about AS u_about, u.name AS u_name, " +
-                        "u.email AS u_email, u.isAnonymous AS u_isAnonymous "; query_f += "JOIN users u ON u.email = t.user "; break;
+                        "u.email AS u_email, u.isAnonymous AS u_isAnonymous, GROUP_CONCAT(DISTINCT f2.users_email_follower) " +
+                        "AS u_followers, GROUP_CONCAT(DISTINCT f3.users_email_following) AS u_following, " +
+                        "GROUP_CONCAT(DISTINCT s.threads_id) AS u_subscriptions ";
+                        query_f += "JOIN users u ON u.email = t.user " +
+                            "LEFT JOIN followers f2 ON u.email = f2.users_email_following " +
+                            "LEFT JOIN followers f3 ON u.email = f3.users_email_follower " +
+                            "LEFT JOIN subscriptions s ON u.email = s.users_email "; userfix = 1; break;
                 }
             }
         } else {
@@ -165,7 +172,13 @@ var listThreads = function(req, res) {
                 case 'forum': query_s += ", f.id AS f_id, f.name as f_name, f.short_name as f_short_name, f.user as f_user";
                     query_f += "JOIN forums f ON t.forum = f.short_name "; break;
                 case 'user': query_s += ", u.id AS u_id, u.username AS u_username, u.about AS u_about, u.name AS u_name, " +
-                    "u.email AS u_email, u.isAnonymous AS u_isAnonymous "; query_f += "JOIN users u ON u.email = t.user "; break;
+                    "u.email AS u_email, u.isAnonymous AS u_isAnonymous, GROUP_CONCAT(DISTINCT f2.users_email_follower) " +
+                    "AS u_followers, GROUP_CONCAT(DISTINCT f3.users_email_following) AS u_following, " +
+                    "GROUP_CONCAT(DISTINCT s.threads_id) AS u_subscriptions ";
+                    query_f += "JOIN users u ON u.email = t.user " +
+                    "LEFT JOIN followers f2 ON u.email = f2.users_email_following " +
+                    "LEFT JOIN followers f3 ON u.email = f3.users_email_follower " +
+                    "LEFT JOIN subscriptions s ON u.email = s.users_email "; userfix = 1; break;
             }
             req.query.related = [req.query.related];
         }
@@ -195,6 +208,18 @@ var listThreads = function(req, res) {
                             delete rows[j][key];
                         }
                     }
+                }
+            }
+            if(userfix) {
+                for (var i = 0; i < rows.length; i++) {
+                    if (rows[i].user.followers) rows[i].user.followers = rows[i].user.followers.split(',');
+                    else rows[i].user.followers = [];
+                    if (rows[i].user.following) rows[i].user.following = rows[i].user.following.split(',');
+                    else rows[i].user.following = [];
+                    if (rows[i].user.subscriptions) rows[i].user.subscriptions = rows[i].user.subscriptions.split(',');
+                    else rows[i].user.subscriptions = [];
+                    for (var j = 0; j < rows[i].user.subscriptions.length; j++)
+                        rows[i].user.subscriptions[j] = +rows[i].user.subscriptions[j];
                 }
             }
         }

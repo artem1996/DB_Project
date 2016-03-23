@@ -51,6 +51,6 @@ app.post('/db/api/post/:name', post_post.index);
 app.get('/db/api/post/:name', post_get.index);
 //app.get('/', routes.index);
 
-app.listen(3000, function(){
+app.listen(3000, '0.0.0.0', function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });
