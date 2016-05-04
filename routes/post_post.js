@@ -14,7 +14,7 @@ exports.index = function(req, res, next) {
 var create = function(req, res) {
     serv.db.query("INSERT INTO posts SET ?", req.body, function(err, row) {
         if (err) {
-            console.log(err);
+           ;//console.log(err);
             res.end(serv.error_message(3));
             return;
         }
@@ -23,18 +23,18 @@ var create = function(req, res) {
             var query = "UPDATE posts SET mpath = '" + id + "' WHERE id = " + id + ";";
             var lol = serv.db.query(query, function(err) {
                 if(err)
-                    console.log(err);
+                   ;//console.log(err);
             });
         } else {
             var query = "UPDATE posts SET mpath = CONCAT(mpath, '\\\\', " + id + ") WHERE id = " + id + ";";
             var lol = serv.db.query(query, function(err) {
                 if(err)
-                    console.log(err);
+                   ;//console.log(err);
             });
         }
         serv.db.query("SELECT * FROM posts WHERE id = ?;", id, function(err, row) {
             if(err) {
-                console.log(err);
+               ;//console.log(err);
                 res.end(serv.error_message(4));
                 return;
             }
@@ -52,7 +52,7 @@ var remove = function(req, res) {
     }
     serv.db.query("UPDATE posts SET isDeleted = 1 WHERE id = ?;", req.body.post, function(err, row) {
         if(err) {
-            console.log(err);
+           ;//console.log(err);
             res.end(serv.error_message(5));
             return;
         }
@@ -73,7 +73,7 @@ var restore = function(req, res) {
     }
     serv.db.query("UPDATE posts SET isDeleted = 0 WHERE id = ?;", req.body.post, function(err, row) {
         if(err) {
-            console.log(err);
+           ;//console.log(err);
             res.end(serv.error_message(3));
             return;
         }
@@ -95,7 +95,7 @@ var update = function(req, res) {
     var instead = [req.body.message, req.body.post];
     serv.db.query("UPDATE posts SET message = ? WHERE id = ?;", instead, function(err, row) {
         if(err) {
-            console.log(err);
+           ;//console.log(err);
             res.end(serv.error_message(3));
             return;
         }
@@ -125,7 +125,7 @@ var vote = function(req, res) {
     var query = "UPDATE posts SET " + like + " = " + like + " + 1, points = points " + (req.body.vote == 1?"+":"-") +" 1 WHERE id = " + req.body.post;
     serv.db.query(query, function(err, row) {
         if(err) {
-            console.log(err);
+           ;//console.log(err);
             res.end(serv.error_message(3));
             return;
         }

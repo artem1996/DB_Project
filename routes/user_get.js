@@ -17,7 +17,7 @@ var details = function(req, res) {
     }
     serv.db.query("SELECT * FROM users WHERE email = ?;", req.query.user, function(err, rows) {
         if(err) {
-            console.log(err);
+           //console.log(err);
             res.end(serv.error_message(1));
             return;
         }
@@ -30,7 +30,7 @@ var details = function(req, res) {
         "') UNION (SELECT 0+2 AS ind, threads_id AS value FROM subscriptions WHERE users_email = '" + req.query.user + "');";
         serv.db.query(query, function(err, rows) {
             if(err) {
-                console.log(err);
+               //console.log(err);
                 res.end(serv.error_message(4));
                 return;
             }
@@ -57,7 +57,7 @@ var listPosts = function(req, res) {
     serv.db.query(query, function(err, rows) {
         if(err) {
             res.end(serv.error_message(3));
-            console.log(err);
+            //console.log(err);
             return;
         }
         if(!rows.length) {

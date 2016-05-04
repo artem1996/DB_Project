@@ -19,14 +19,14 @@ var create = function(req, res) {
     serv.db.query("INSERT INTO threads SET ?;", req.body, function(err, rows) {
         if(err) {
             res.end(serv.error_message(3));
-            console.log("thread_post" + err);
+           ;//console.log("thread_post" + err);
             return;
         }
         var id = rows.insertId;
         serv.db.query("SELECT * FROM threads WHERE id = ?;", id, function(err, rows) {
             if(err) {
                 res.end(serv.error_message(4));
-                console.log(err);
+               ;//console.log(err);
                 return;
             }
             var answ = {code: 0, response: rows[0]};
@@ -99,7 +99,7 @@ var update = function(req, res) {
         serv.db.query("SELECT * FROM threads WHERE id = ?;", req.body.thread, function(err, rows) {
             if(err) {
                 res.end(serv.error_message(4));
-                console.log(err);
+               ;//console.log(err);
                 return;
             }
             var answ = {code: 0, response: rows[0]};
@@ -124,7 +124,7 @@ var vote = function(req, res) {
         serv.db.query("SELECT * FROM threads WHERE id = ?;", req.body.thread, function(err, rows) {
             if(err) {
                 res.end(serv.error_message(4));
-                console.log(err);
+               ;//console.log(err);
                 return;
             }
             var answ = {code: 0, response: rows[0]};
@@ -138,7 +138,7 @@ var subscribe = function(req, res) {
     serv.db.query("INSERT INTO subscriptions SET ?", replace, function(err, rows) {
         if(err || !rows.affectedRows) {
             res.end(serv.error_message(3));
-            console.log(err);
+           ;//console.log(err);
             return;
         }
         res.end(JSON.stringify({code:0, response:req.body}));
@@ -150,7 +150,7 @@ var unsubscribe = function(req, res) {
     serv.db.query(query, function(err, rows) {
         if(err || !rows.affectedRows) {
             res.end(serv.error_message(1));
-            console.log(err);
+           ;//console.log(err);
             return;
         }
         res.end(JSON.stringify({code:0, response:req.body}));

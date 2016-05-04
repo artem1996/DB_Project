@@ -14,14 +14,14 @@ var create = function(req, res) {
     serv.db.query("INSERT INTO users SET ?;", req.body, function(err, rows) {
         if(err) {
             res.end(serv.error_message(5));
-            console.log(err);
+           ;//console.log(err);
             return;
         }
         var id = rows.insertId;
         serv.db.query("SELECT * FROM users WHERE id = ?;", id, function(err, rows) {
             if(err) {
                 res.end(serv.error_message(4));
-                console.log(err);
+               ;//console.log(err);
                 return;
             }
             var answ = {code: 0, response: rows[0]};
@@ -44,7 +44,7 @@ var update = function(req, res) {
         serv.db.query("SELECT * FROM users WHERE email = ?;", req.body.user, function(err, rows) {
             if(err) {
                 res.end(serv.error_message(4));
-                console.log(err);
+               ;//console.log(err);
                 return;
             }
             var answ = {code: 0, response: rows[0]};
@@ -62,7 +62,7 @@ var follow = function(req, res) {
     serv.db.query(query, function(err, rows) {
         serv.db.query("SELECT * FROM users WHERE email = ?;", req.body.followee, function(err, rows) {
             if(err) {
-                console.log(err);
+               ;//console.log(err);
                 res.end(serv.error_message(1));
                 return;
             }
@@ -75,7 +75,7 @@ var follow = function(req, res) {
                 "') UNION (SELECT 0+2 AS ind, threads_id AS value FROM subscriptions WHERE users_email = '" + req.body.followee + "');";
             serv.db.query(query, function(err, rows) {
                 if(err) {
-                    console.log(err);
+                   ;//console.log(err);
                     res.end(serv.error_message(4));
                     return;
                 }
@@ -96,11 +96,11 @@ var unfollow = function(req, res) {
         return;
     }
     var query = "DELETE FROM followers WHERE users_email_following = '" + req.body.followee + "' AND users_email_follower = '" + req.body.follower +"';";
-    console.log(query);
+   ;//console.log(query);
     serv.db.query(query, function(err, rows) {
         serv.db.query("SELECT * FROM users WHERE email = ?;", req.body.follower, function(err, rows) {
             if(err) {
-                console.log(err);
+               ;//console.log(err);
                 res.end(serv.error_message(1));
                 return;
             }
@@ -113,7 +113,7 @@ var unfollow = function(req, res) {
                 "') UNION (SELECT 0+2 AS ind, threads_id AS value FROM subscriptions WHERE users_email = '" + req.body.followee + "');";
             serv.db.query(query, function(err, rows) {
                 if(err) {
-                    console.log(err);
+                   ;//console.log(err);
                     res.end(serv.error_message(4));
                     return;
                 }

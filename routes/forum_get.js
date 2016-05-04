@@ -17,7 +17,7 @@ var details = function (req, res) {
     }
     serv.db.query("SELECT * FROM forums WHERE short_name = ?;", req.query.forum, function(err, rows) {
         if (err) {
-            console.log(err);
+            ;//console.log(err);
             res.end(serv.error_message(5));
             return;
         }
@@ -31,7 +31,7 @@ var details = function (req, res) {
         if (req.query.related == "user") {
             serv.db.query("SELECT * FROM users WHERE email = ?;", rows[0].user, function(err, rows) {
                 if (err || !rows[0]) {
-                console.log(err);
+                ;//console.log(err);
                 res.end(serv.error_message(4));
                 return;
                 }
@@ -45,7 +45,7 @@ var details = function (req, res) {
                     "';SELECT threads_id FROM subscriptions WHERE users_email = '" + response.user.email + "';";
                 serv.db.query(query, function(err, rows) {
                     if(err) {
-                        console.log(err);
+                        ;//console.log(err);
                         res.end(serv.error_message(4));
                         return;
                     }
@@ -104,7 +104,7 @@ var listPosts = function(req, res) {
     }
     query_s += " ";
     serv.db.query(query_s + query_f + query_w, function(err, rows) {
-        if(err) console.log(err);
+        if(err) ;//console.log(err);
         if(req.query.related) {
             for (var i = 0; i < req.query.related.length; i++) {
                 var substr = "";
@@ -185,7 +185,7 @@ var listThreads = function(req, res) {
     }
     query_s += " ";
     serv.db.query(query_s + query_f + query_w, function(err, rows) {
-        if(err) console.log(err);
+        if(err) ;//console.log(err);
         if(req.query.related) {
             for (var i = 0; i < req.query.related.length; i++) {
                 var substr = "";
@@ -244,7 +244,7 @@ var listUsers = function(req, res) {
         query += "LIMIT " + req.query.limit;
     query += ";";
     serv.db.query(query, function(err, rows) {
-        if(err) console.log(err);
+        if(err) ;// (err);
         for(var i = 0; i < rows.length; i++) {
             if(rows[i].followers) rows[i].followers = rows[i].followers.split(',');
             else rows[i].followers = [];

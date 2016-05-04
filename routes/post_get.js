@@ -28,7 +28,7 @@ var list = function(req, res) {
     query = query + ";";
     serv.db.query(query, function(err, row) {
         if(err) {
-            console.log(err);
+           ;//console.log(err);
             res.end(serv.error_message(3));
             return;
         }
@@ -51,7 +51,7 @@ var details = function(req, res) {
     }
     serv.db.query("SELECT * FROM posts WHERE id = ?;", req.query.post, function(err, rows) {
         if(err || !rows.length) {
-            console.log(err);
+           ;//console.log(err);
             res.end(serv.error_message(1));
             return;
         }

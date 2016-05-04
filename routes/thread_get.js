@@ -16,7 +16,7 @@ var details = function(req, res) {
     }
     serv.db.query("SELECT * FROM threads WHERE id = ?;", req.query.thread, function(err, rows) {
         if(err || !rows.length) {
-            console.log(err);
+           ;//console.log(err);
             res.end(serv.error_message(3));
             return;
         }
@@ -39,7 +39,7 @@ var details = function(req, res) {
             }
             serv.db.query(query, function(err, rows) {
                 if(err) {
-                    console.log(err);
+                   ;//console.log(err);
                     res.end(serv.error_message(3));
                     return;
                 }
@@ -83,7 +83,7 @@ var list = function(req, res) {
     serv.db.query(query, function(err, rows) {
         if(err) {
             res.end(serv.error_message(3));
-            console.log(err);
+           ;//console.log(err);
             return;
         }
         res.end(JSON.stringify({code:0, response: rows}));
@@ -123,7 +123,7 @@ var listPosts = function(req, res) {
         serv.db.query(query, function(err, rows) {
             if(err) {
                 res.end(serv.error_message(3));
-                console.log(err);
+               ;//console.log(err);
                 return;
             }
             for(var i = 0; i < rows.length; i++) {
@@ -148,7 +148,7 @@ var listPosts = function(req, res) {
             subquery += " LIMIT " + req.query.limit;
         serv.db.query(subquery, function(err, rows) {
             if(err) {
-                console.log(err);
+               ;//console.log(err);
                 return;
             }
             subquery = "-1";
@@ -158,7 +158,7 @@ var listPosts = function(req, res) {
             serv.db.query(query, function(err, rows) {
                 if(err) {
                     res.end(serv.error_message(3));
-                    console.log(err);
+                   ;//console.log(err);
                     return;
                 }
                 res.end(JSON.stringify({code:0, response: rows}));
