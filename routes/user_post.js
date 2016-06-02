@@ -14,19 +14,13 @@ var create = function(req, res) {
     serv.db.query("INSERT INTO users SET ?;", req.body, function(err, rows) {
         if(err) {
             res.end(serv.error_message(5));
-           ;//console.log(err);
+            //console.log(err);
             return;
         }
-        var id = rows.insertId;
-        serv.db.query("SELECT * FROM users WHERE id = ?;", id, function(err, rows) {
-            if(err) {
-                res.end(serv.error_message(4));
-               ;//console.log(err);
-                return;
-            }
-            var answ = {code: 0, response: rows[0]};
-            res.end(JSON.stringify(answ));
-        });
+        if(req.body.isAnonymous) {} else req.body.isAnonymous = false;
+        req.body.id = rows.insertId;
+        var answ = {code: 0, response: req.body};
+        res.end(JSON.stringify(answ));
     });
 };
 

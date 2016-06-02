@@ -22,16 +22,10 @@ var create = function(req, res) {
            ;//console.log("thread_post" + err);
             return;
         }
-        var id = rows.insertId;
-        serv.db.query("SELECT * FROM threads WHERE id = ?;", id, function(err, rows) {
-            if(err) {
-                res.end(serv.error_message(4));
-               ;//console.log(err);
-                return;
-            }
-            var answ = {code: 0, response: rows[0]};
-            res.end(JSON.stringify(answ));
-        });
+        if(req.body.isDeleted) {} else {req.body.isDeleted = false;}
+        req.body.id = rows.insertId;
+        var answ = {code: 0, response: req.body};
+        res.end(JSON.stringify(answ));
     });
 };
 

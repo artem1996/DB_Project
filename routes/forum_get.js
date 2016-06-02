@@ -228,33 +228,61 @@ var listThreads = function(req, res) {
 };
 
 var listUsers = function(req, res) {
-    var query = "SELECT about, email, GROUP_CONCAT(DISTINCT f2.users_email_follower) AS followers, GROUP_CONCAT(DISTINCT f3.users_email_following) AS following, " +
+    /*var query = "SELECT about, email, GROUP_CONCAT(DISTINCT f2.users_email_follower) AS followers, GROUP_CONCAT(DISTINCT f3.users_email_following) AS following, " +
         "u.id, isAnonymous, name, GROUP_CONCAT(DISTINCT s.threads_id) AS subscriptions, username " +
         "FROM posts p JOIN users u ON u.email = p.user " +
         "LEFT JOIN followers f2 ON u.email = f2.users_email_following " +
         "LEFT JOIN followers f3 ON u.email = f3.users_email_follower " +
         "LEFT JOIN subscriptions s ON u.email = s.users_email " +
+        "WHERE p.forum = '" + req.query.forum + "' ";*/
+
+    var query = "SELECT about, email, u.id, isAnonymous, name, u.username " +
+        "FROM posts p JOIN users u ON u.email = p.user " +
         "WHERE p.forum = '" + req.query.forum + "' ";
-    if(req.query.since_id)
-        query += "AND p.user >= '" + req.query.since_id + "'";
-    query += " GROUP BY u.id ORDER BY u.name ";
+    query += "GROUP BY p.userName ORDER BY p.userName ";
     if(req.query.order != "asc")
         query += "DESC ";
     if(req.query.limit)
         query += "LIMIT " + req.query.limit;
     query += ";";
+    //console.log(query);
     serv.db.query(query, function(err, rows) {
-        if(err) ;// (err);
-        for(var i = 0; i < rows.length; i++) {
-            if(rows[i].followers) rows[i].followers = rows[i].followers.split(',');
-            else rows[i].followers = [];
-            if(rows[i].following) rows[i].following = rows[i].following.split(',');
-            else rows[i].following = [];
-            if(rows[i].subscriptions) rows[i].subscriptions = rows[i].subscriptions.split(',');
-            else rows[i].subscriptions = [];
-            for(var j = 0; j < rows[i].subscriptions.length; j++)
-                rows[i].subscriptions[j] = +rows[i].subscriptions[j];
+        if(err) console.log(err);
+        if(rows.length == 0) {
+            res.end(JSON.stringify({code:0, response: {}}));
+            return;
         }
-        res.end(JSON.stringify({code:0, response: rows}));
+        var userEmail = "'a'";
+        var prevRows = {};
+        for(var i = 0; i < rows.length; i++) {
+            console.log(JSON.stringify(rows[i]));
+            prevRows[rows[i].email] = rows[i];
+            prevRows[rows[i].email].followers = [];
+            prevRows[rows[i].email].following = [];
+            prevRows[rows[i].email].subscriptions = [];
+            userEmail += ", '" + rows[i].email + "'";
+        }
+        var query = "(SELECT 0+0 AS ind, GROUP_CONCAT(users_email_following) AS value, users_email_follower AS user FROM followers WHERE users_email_follower IN (" + userEmail + ") GROUP BY user) " +
+            "UNION (SELECT 0+1 AS ind, GROUP_CONCAT(users_email_follower) AS value, users_email_following AS user FROM followers WHERE users_email_following IN (" + userEmail + ") GROUP BY user) " +
+            "UNION (SELECT 0+2 AS ind, GROUP_CONCAT(DISTINCT s.threads_id) AS value, users_email AS user FROM subscriptions s WHERE users_email IN (" + userEmail + ") GROUP BY user);";
+        //console.log(userEmail);
+        query = serv.db.query(query, function(err, rows) {
+            if(err) console.log(err);
+            //console.log(query);
+            for(var i = 0; i < rows.length; i++) {
+                switch (rows[i].ind) {
+                    case 0: prevRows[rows[i].user].following = rows[i].value.split(','); break;
+                    case 1: prevRows[rows[i].user].followers = rows[i].value.split(','); break;
+                    case 2: prevRows[rows[i].user].subscriptions = rows[i].value.split(','); for (var j = 0; j < prevRows[rows[i].user].subscriptions.length; j++)
+                        prevRows[rows[i].user].subscriptions[j] = +prevRows[rows[i].user].subscriptions[j]; break;
+                }
+            }
+            var answ = [];
+            console.log(JSON.stringify(prevRows));
+            for(i in prevRows) {
+                answ.push(prevRows[i]);
+            }
+            res.end(JSON.stringify({code:0, response: answ}));
+        });
     });
 };

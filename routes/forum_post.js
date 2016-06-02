@@ -15,10 +15,7 @@ var create = function(req, res) {
                 res.end(serv.error_message(5));
                 return;
             }
-            var id = rows.insertId;
-            serv.db.query("SELECT * FROM forums WHERE id = ?;", id, function(err, rows) {
-                if (err);//console.log(err);
-                res.end(JSON.stringify({code: 0, response: rows[0]}));
-            })
+            req.body.id = rows.insertId;
+            res.end(JSON.stringify({code: 0, response: req.body}));
         })
 };
