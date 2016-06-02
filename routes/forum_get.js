@@ -247,7 +247,7 @@ var listUsers = function(req, res) {
     query += ";";
     //console.log(query);
     serv.db.query(query, function(err, rows) {
-        if(err) console.log(err);
+        if(err) ;//console.log(err);
         if(rows.length == 0) {
             res.end(JSON.stringify({code:0, response: {}}));
             return;
@@ -255,7 +255,7 @@ var listUsers = function(req, res) {
         var userEmail = "'a'";
         var prevRows = {};
         for(var i = 0; i < rows.length; i++) {
-            console.log(JSON.stringify(rows[i]));
+            //console.log(JSON.stringify(rows[i]));
             prevRows[rows[i].email] = rows[i];
             prevRows[rows[i].email].followers = [];
             prevRows[rows[i].email].following = [];
@@ -266,9 +266,8 @@ var listUsers = function(req, res) {
             "UNION (SELECT 0+1 AS ind, GROUP_CONCAT(users_email_follower) AS value, users_email_following AS user FROM followers WHERE users_email_following IN (" + userEmail + ") GROUP BY user) " +
             "UNION (SELECT 0+2 AS ind, GROUP_CONCAT(DISTINCT s.threads_id) AS value, users_email AS user FROM subscriptions s WHERE users_email IN (" + userEmail + ") GROUP BY user);";
         //console.log(userEmail);
-        query = serv.db.query(query, function(err, rows) {
-            if(err) console.log(err);
-            //console.log(query);
+        serv.db.query(query, function(err, rows) {
+            if(err) ;//console.log(err);
             for(var i = 0; i < rows.length; i++) {
                 switch (rows[i].ind) {
                     case 0: prevRows[rows[i].user].following = rows[i].value.split(','); break;
@@ -278,7 +277,7 @@ var listUsers = function(req, res) {
                 }
             }
             var answ = [];
-            console.log(JSON.stringify(prevRows));
+            //console.log(JSON.stringify(prevRows));
             for(i in prevRows) {
                 answ.push(prevRows[i]);
             }
