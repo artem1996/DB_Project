@@ -7,29 +7,24 @@ exports.index = function(req, res) {
         res.end(JSON.stringify({code: 3, message: "некорректный запрос (семантически)"}));
     } else {
         connection.db.query("DELETE FROM followers;", function(err, rows) {
-            if (err)
-               ;//console.log(err);
+            cnt++;
         });
         connection.db.query("DELETE FROM subscriptions;", function(err, rows) {
-            if (err)
-               ;//console.log(err);
+            cnt++;
         });
         connection.db.query("DELETE FROM posts;", function(err, rows) {
-            if (err)
-               ;//console.log(err);
+            cnt++;
         });
         connection.db.query("DELETE FROM threads;", function(err, rows) {
-            if (err)
-               ;//console.log(err);
+            cnt++;
         });
         connection.db.query("DELETE FROM forums;", function(err, rows) {
-            if (err)
-               ;//console.log(err);
+            cnt++;
         });
         connection.db.query("DELETE FROM users;", function(err, rows) {
-            if (err)
-               ;//console.log(err);
+            cnt++;
         });
+        while (cnt != 6);
         res.end(JSON.stringify({code: 0, response: "OK"}));
     }
 };

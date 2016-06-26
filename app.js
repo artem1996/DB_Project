@@ -1,8 +1,3 @@
-
-/**
- * Module dependencies.
- */
-
 var express = require('express'),
     status = require('./routes/status'),
     clear = require('./routes/clear'),
@@ -51,6 +46,6 @@ app.post('/db/api/post/:name', post_post.index);
 app.get('/db/api/post/:name', post_get.index);
 //app.get('/', routes.index);
 
-app.listen(80, '127.0.0.1', function(){
+app.listen(5000, '0.0.0.0', function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });
